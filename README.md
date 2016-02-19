@@ -14,3 +14,9 @@ Let's start something!
     npm install --save-dev gulp
     ```
 6. Install gulp globally (`npm install -g gulp`)
+7. Setup a project:
+    ```
+    mkdir -p src/assets
+    touch src/assets/index.html    # and put some html into it...
+    touch gulpfile.js
+    ```
