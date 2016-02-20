@@ -8,6 +8,7 @@ var rename = require('gulp-rename');
 var through = require('through2');
 var merge = require('merge-stream');
 var gutil = require('gulp-util');
+var marked = require('gulp-marked');
 var source = require('vinyl-source-stream');
 var path = require('path');
 var del = require('del');
@@ -41,7 +42,30 @@ function buildBlogTask() {
 
   /* split the stream into two paths */
   var processedPosts = posts
-  /* create a post from the data */
+    .pipe(through.obj(function (file, _, callback) {
+      var self = this;
+      /* get the data from the json file contents */
+      var data = JSON.parse(file.contents);
+      /* look for a .md file */
+      var filePath = file.path.replace(/\.json$/, '.md');
+
+      /* use the .md file and process it through marked */
+      gulp.src(filePath)
+        .pipe(marked())
+        .pipe(through.obj(function (mdFile, _, mdCallback) {
+
+          /* replace 'content' field with processed file */
+          data.content = mdFile.contents.toString();
+          file._contents = new Buffer(JSON.stringify(data));
+
+          mdCallback();
+
+          /* push the modified json data back into first stream */
+          self.push(file);
+          callback();
+        }));
+    }))
+    /* create a post from the data */
     .pipe(wrap({src : 'src/blog/post-template.html'}))
     /* rename the (.json) posts into .html files */
     .pipe(rename({extname : '.html'}))
