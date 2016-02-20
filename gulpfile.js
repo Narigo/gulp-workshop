@@ -7,6 +7,8 @@ gulp.task('default', ['build']);
 gulp.task('build', ['build:assets', 'build:sass']);
 gulp.task('build:assets', buildAssetsTask);
 gulp.task('build:sass', buildSassTask);
+
+gulp.task('watch', ['build'], watchTask);
 gulp.task('clean', cleanTask);
 
 function buildAssetsTask() {
@@ -23,6 +25,11 @@ function buildSassTask() {
     .pipe(sass({outputStyle: 'expanded'}))
     /* ... and writes them into the out folder */
     .pipe(gulp.dest('out/css'));
+}
+
+function watchTask() {
+  gulp.watch('src/assets/**', ['build:assets']);
+  gulp.watch('src/styles/**', ['build:sass']);
 }
 
 function cleanTask() {
