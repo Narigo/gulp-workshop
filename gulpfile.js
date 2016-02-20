@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var autoprefixer = require('gulp-autoprefixer');
+var plumber = require('gulp-plumber');
 var del = require('del');
 
 gulp.task('default', ['build']);
@@ -22,16 +23,15 @@ function buildAssetsTask() {
 function buildSassTask() {
   /* takes the main.scss file */
   return gulp.src('src/styles/main.scss')
+    /* handle errors on the following streams */
+    .pipe(plumber(function (err) {
+      console.log('[error]', err);
+      this.push(null);
+    }))
     /* transforms it through sass */
-    .pipe(sass({outputStyle: 'expanded'}).on('error', function(err) {
-      console.log('[error]', err);
-      this.push(null);
-    }))
+    .pipe(sass({outputStyle : 'expanded'}))
     /* add prefixes for better browser support */
-    .pipe(autoprefixer().on('error', function(err) {
-      console.log('[error]', err);
-      this.push(null);
-    }))
+    .pipe(autoprefixer())
     /* ... and writes them into the out folder */
     .pipe(gulp.dest('out/css'));
 }
