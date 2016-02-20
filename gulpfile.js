@@ -22,7 +22,10 @@ function buildSassTask() {
   /* takes the main.scss file */
   return gulp.src('src/styles/main.scss')
     /* transforms it through sass */
-    .pipe(sass({outputStyle: 'expanded'}))
+    .pipe(sass({outputStyle: 'expanded'}).on('error', function(err) {
+      console.log('[error]', err);
+      this.push(null);
+    }))
     /* ... and writes them into the out folder */
     .pipe(gulp.dest('out/css'));
 }
