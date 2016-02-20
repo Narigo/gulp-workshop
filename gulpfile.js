@@ -1,5 +1,6 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
+var autoprefixer = require('gulp-autoprefixer');
 var del = require('del');
 
 gulp.task('default', ['build']);
@@ -23,6 +24,11 @@ function buildSassTask() {
   return gulp.src('src/styles/main.scss')
     /* transforms it through sass */
     .pipe(sass({outputStyle: 'expanded'}).on('error', function(err) {
+      console.log('[error]', err);
+      this.push(null);
+    }))
+    /* add prefixes for better browser support */
+    .pipe(autoprefixer().on('error', function(err) {
       console.log('[error]', err);
       this.push(null);
     }))
