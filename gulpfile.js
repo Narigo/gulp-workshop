@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var sass = require('gulp-sass');
 var autoprefixer = require('gulp-autoprefixer');
 var plumber = require('gulp-plumber');
+var browserSync = require('browser-sync');
 var del = require('del');
 
 gulp.task('default', ['build']);
@@ -17,7 +18,9 @@ function buildAssetsTask() {
   /* takes all files it finds under src/assets/ */
   return gulp.src('src/assets/**')
     /* ... and writes them into the out folder */
-    .pipe(gulp.dest('out'));
+    .pipe(gulp.dest('out'))
+    /* tell browser-sync which files have changed to inject them */
+    .pipe(browserSync.stream());
 }
 
 function buildSassTask() {
@@ -33,10 +36,19 @@ function buildSassTask() {
     /* add prefixes for better browser support */
     .pipe(autoprefixer())
     /* ... and writes them into the out folder */
-    .pipe(gulp.dest('out/css'));
+    .pipe(gulp.dest('out/css'))
+    /* tell browser-sync which files have changed to inject them */
+    .pipe(browserSync.stream());
 }
 
 function watchTask() {
+  browserSync({
+    server : {
+      baseDir : 'out'
+    },
+    open : false
+  });
+
   gulp.watch('src/assets/**', ['build:assets']);
   gulp.watch('src/styles/**', ['build:sass']);
 }
