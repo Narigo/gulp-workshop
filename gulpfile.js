@@ -11,6 +11,7 @@ var gutil = require('gulp-util');
 var marked = require('gulp-marked');
 var source = require('vinyl-source-stream');
 var path = require('path');
+var ghPages = require('gulp-gh-pages');
 var del = require('del');
 
 gulp.task('default', ['build']);
@@ -20,8 +21,15 @@ gulp.task('build:assets', buildAssetsTask);
 gulp.task('build:sass', buildSassTask);
 gulp.task('build:blog', buildBlogTask);
 
+gulp.task('deploy', ['build'], deployTask);
+
 gulp.task('watch', ['build'], watchTask);
 gulp.task('clean', cleanTask);
+
+function deployTask() {
+  return gulp.src('out/**')
+    .pipe(ghPages());
+}
 
 function buildAssetsTask() {
   /* takes all files it finds under src/assets/ */
