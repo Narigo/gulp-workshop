@@ -1,0 +1,15 @@
+body {
+  color: #333;
+  background-color: #aaa;
+  font-family: Helvetica, sans-serif;
+}
+
+#blog {
+  font-family: "Helvetica Neue";
+}
+
+#blog h2 {
+  font-family: "Courier New";
+  -webkit-transform: rotate(-1deg);
+          transform: rotate(-1deg);
+}
