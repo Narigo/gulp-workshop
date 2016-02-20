@@ -4,6 +4,7 @@ var autoprefixer = require('gulp-autoprefixer');
 var plumber = require('gulp-plumber');
 var browserSync = require('browser-sync');
 var wrap = require('gulp-wrap');
+var rename = require('gulp-rename');
 var del = require('del');
 
 gulp.task('default', ['build']);
@@ -30,6 +31,8 @@ function buildBlogTask() {
   return gulp.src('src/blog/posts/*.json')
     /* wrap uses the data with a template */
     .pipe(wrap({src : 'src/blog/post-template.html'}))
+    /* rename the (.json) posts into .html files */
+    .pipe(rename({extname : '.html'}))
     /* ... and writes them into the out folder */
     .pipe(gulp.dest('out/blog'))
     /* tell browser-sync which files have changed to inject them */
