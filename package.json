@@ -4,6 +4,9 @@
   "description": "Testing around with GulpJS",
   "main": "index.js",
   "scripts": {
+    "build": "gulp build",
+    "clean": "gulp clean",
+    "start": "gulp clean && gulp watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Joern Bernhardt",
