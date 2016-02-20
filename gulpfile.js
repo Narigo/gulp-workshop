@@ -3,13 +3,15 @@ var sass = require('gulp-sass');
 var autoprefixer = require('gulp-autoprefixer');
 var plumber = require('gulp-plumber');
 var browserSync = require('browser-sync');
+var wrap = require('gulp-wrap');
 var del = require('del');
 
 gulp.task('default', ['build']);
 
-gulp.task('build', ['build:assets', 'build:sass']);
+gulp.task('build', ['build:assets', 'build:blog', 'build:sass']);
 gulp.task('build:assets', buildAssetsTask);
 gulp.task('build:sass', buildSassTask);
+gulp.task('build:blog', buildBlogTask);
 
 gulp.task('watch', ['build'], watchTask);
 gulp.task('clean', cleanTask);
@@ -19,6 +21,17 @@ function buildAssetsTask() {
   return gulp.src('src/assets/**')
     /* ... and writes them into the out folder */
     .pipe(gulp.dest('out'))
+    /* tell browser-sync which files have changed to inject them */
+    .pipe(browserSync.stream());
+}
+
+function buildBlogTask() {
+  /* takes all json files it finds under src/blog/posts */
+  return gulp.src('src/blog/posts/*.json')
+    /* wrap uses the data with a template */
+    .pipe(wrap({src : 'src/blog/post-template.html'}))
+    /* ... and writes them into the out folder */
+    .pipe(gulp.dest('out/blog'))
     /* tell browser-sync which files have changed to inject them */
     .pipe(browserSync.stream());
 }
@@ -50,6 +63,7 @@ function watchTask() {
   });
 
   gulp.watch('src/assets/**', ['build:assets']);
+  gulp.watch('src/blog/**', ['build:blog']);
   gulp.watch('src/styles/**', ['build:sass']);
 }
 
